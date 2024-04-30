@@ -1,6 +1,6 @@
 package environment;
 import items.item;
-public class tile {
+public class Tile {
     /*
     * The environment.tile has an item which can be any item
     * player and murderer
@@ -10,13 +10,9 @@ public class tile {
     private item item;
     private boolean isPlayer;
     private boolean isMurderer;
-    private final int row;
-    private final int column;
 
-     tile(int r, int c){
+     public Tile(){
         this.item = generateRandomItem();
-        this.row = r;
-        this.column = c;
     }
 
     private item generateRandomItem() {
@@ -44,14 +40,6 @@ public class tile {
         return isWall;
     }
 
-    public int getColumn() {
-        return column;
-    }
-
-    public int getRow() {
-        return row;
-    }
-
     public item getItem() {
         return item;
     }
@@ -61,4 +49,11 @@ public class tile {
          else if (isMurderer && isPlayer)return 2;
          else return -1;
     }
+    public boolean hasPlayer() {
+        return isPlayer;
+    }
+    public boolean hasMurderer() {
+        return isMurderer;
+    }
+
 }

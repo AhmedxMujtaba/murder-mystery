@@ -1,13 +1,15 @@
 package entities;
 
+import environment.Tile;
+
 public class Player {
 /*
 * The player has options to run and hide. He has commands to move in 6 directions.
-* If player face a wall it cannot move in that direction.
-* if player moves into the direction of the murderer he dies
-* if player find the gun then he needs to find the murderer and kill him
-* else if the murderer finds the player first then it is game over
-* since the player will be taken by surprise : )
+* If a player faces a wall, it cannot move in that direction.
+* If a player moves into the direction of the murderer, he dies
+*  if the player finds the gun then he needs to find the murderer and kill him
+* else if the murderer finds the player first, then it is game over
+* since surprise will take the player: )
 *
  */
     private String name;
@@ -47,7 +49,7 @@ public class Player {
         return name;
     }
 
-    public boolean doesHasGun() {
+    public boolean hasGun() {
         return hasGun;
     }
 
@@ -82,7 +84,7 @@ public class Player {
         int newColumn = column + 1;
         return isValidMove(newRow,newColumn);
     }
-    public boolean NorthWest(){
+    public boolean movePlayerNorthWest(){
         int newRow = row - 1;
         int newColumn = column - 1;
         return isValidMove(newRow,newColumn);
@@ -106,5 +108,22 @@ public class Player {
             this.column = column;
             this.row = row;
             return true;
+    }
+
+    public void setColumn(int column) {
+        this.column = column;
+    }
+
+    public void setRow(int row) {
+        this.row = row;
+    }
+
+    public void setHasGun(boolean hasGun) {
+        this.hasGun = hasGun;
+    }
+
+    public Tile getCurrentTile(Tile[][] tiles){
+        Tile currentTile = tiles[row][column];
+        return currentTile;
     }
 }

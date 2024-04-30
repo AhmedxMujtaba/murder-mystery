@@ -1,7 +1,5 @@
 package environment;
 import items.*;
-
-import java.util.ArrayList;
 import java.util.Random;
 public class Maze {
 
@@ -11,13 +9,13 @@ public class Maze {
     * some other things inheritied from the items class.
      */
 
-    private tile[][] maze;
-    Maze(){
+    private Tile[][] maze;
+    public Maze(){
         this.maze = generateMaze();
     }
 
-    private tile[][] generateMaze(){
-        tile[][] maze = new tile[7][7];
+    private Tile[][] generateMaze(){
+        Tile[][] maze = new Tile[7][7];
         //add walls and items and a gun;
         generateWalls();
         generateCashItems();
@@ -50,7 +48,7 @@ public class Maze {
         int column = giveRanNum(0,6);
         int maxWalls = giveRanNum(10,20);
         for (int i = 0; i < maxWalls; i++) {
-            tile currentTile = maze[row][column];;
+            Tile currentTile = maze[row][column];;
             while (!currentTile.isWall()){
                 row = rowWithProbability(row,column,69);
                 column = columnWithProbability(row,column,69);
@@ -114,5 +112,9 @@ public class Maze {
         }
         else
             return giveRanNum(0,6);
+    }
+
+    public Tile[][] getTiles() {
+        return maze;
     }
 }
