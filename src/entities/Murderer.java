@@ -85,6 +85,14 @@ public class Murderer {
         this.row = row;
     }
 
+    public int getRow() {
+        return row;
+    }
+
+    public int getColumn() {
+        return column;
+    }
+
     public void setColumnToFollow(int columnToFollow) {
         this.columnToFollow = columnToFollow;
     }

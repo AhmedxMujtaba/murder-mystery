@@ -1,5 +1,6 @@
 package entities;
 
+import environment.Maze;
 import environment.Tile;
 
 public class Player {
@@ -61,50 +62,53 @@ public class Player {
      * return player cords and shot after chaning them
      */
 
-    public boolean movePlayerNorth(){
+    public boolean movePlayerNorth(Tile[][] tiles){
         int newRow = row - 1;
-        return isValidMove(newRow,column);
+        return isValidMove(newRow,column,tiles);
     }
-    public boolean movePlayerSouth(){
+    public boolean movePlayerSouth(Tile[][] tiles){
         int newRow = row + 1;
-        return isValidMove(newRow,column);
+        return isValidMove(newRow,column,tiles);
     }
-    public boolean movePlayerEast(){
+    public boolean movePlayerEast(Tile[][] tiles){
         int newColumn = column + 1;
-        return isValidMove(row,newColumn);
+        return isValidMove(row,newColumn,tiles);
     }
-    public boolean movePlayerWest(){
+    public boolean movePlayerWest(Tile[][] tiles){
         int newColumn = column - 1;
-        return isValidMove(row,newColumn);
+        return isValidMove(row,newColumn,tiles);
     }
 
     //for moving in diagonals
-    public boolean movePlayerNorthEast(){
+    public boolean movePlayerNorthEast(Tile[][] tiles){
         int newRow = row - 1;
         int newColumn = column + 1;
-        return isValidMove(newRow,newColumn);
+        return isValidMove(newRow,newColumn,tiles);
     }
-    public boolean movePlayerNorthWest(){
+    public boolean movePlayerNorthWest(Tile[][] tiles){
         int newRow = row - 1;
         int newColumn = column - 1;
-        return isValidMove(newRow,newColumn);
+        return isValidMove(newRow,newColumn,tiles);
 
     }
-    public boolean movePlayerSouthEast(){
+    public boolean movePlayerSouthEast(Tile[][] tiles){
         int newRow = row + 1;
         int newColumn = column + 1;
-        return isValidMove(newRow,newColumn);
+        return isValidMove(newRow,newColumn,tiles);
     }
-    public boolean movePlayerSouthWest(){
+    public boolean movePlayerSouthWest(Tile[][] tiles){
         int newRow = row + 1;
         int newColumn = column - 1;
-        return isValidMove(newRow,newColumn);
+        return isValidMove(newRow,newColumn,tiles);
     }
 
-    private boolean isValidMove(int row, int column){
+    private boolean isValidMove(int row, int column,Tile[][] tiles){
         if (row > 6 || row < 0 || column > 6 || column < 0)
             return false;
-        else
+        if (tiles[row][column].isWall()) {
+            System.out.println("Wall");
+            return false;
+        } else
             this.column = column;
             this.row = row;
             return true;

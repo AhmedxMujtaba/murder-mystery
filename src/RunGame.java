@@ -2,6 +2,7 @@ import entities.*;
 import environment.*;
 import java.util.Scanner;
 import java.util.Random;
+import items.Gun;
 public class RunGame {
     //start game ask player for name.
     //make terrain.
@@ -13,27 +14,96 @@ public class RunGame {
         Maze maze = new Maze();
         Tile[][] tiles = maze.getTiles();
         Player player = setPlayerSpawn(new Player(),maze);
+
         Murderer murderer = setMurdererSpawn(new Murderer(),maze);
+        Gun gun = setGunSpawn(new Gun(), maze);
 
         greetings(player);
+
         while (true) {
+            maze.printMazeLayout(tiles);
             directionsOptions();
-            movePlayer(player);
+            movePlayer(player,maze);
             Tile currentTile = player.getCurrentTile(tiles);
-            if (currentTile.hasPlayer() && currentTile.hasMurderer() && player.hasGun())
-            {
-                //todo display total cash collected and no of turns
-                //todo end game
-                System.out.println("U win");
+            pickGunUp(player, currentTile);
+            murderer.setColumnToFollow(player.getColumn());
+            murderer.setRowToFollow(player.getRow());
+            if (winGame(currentTile, player))
                 break;
-            }
+            maze.removeMazeCordsForMurderer(murderer);
             murderer.followPlayer();
-            if (currentTile.hasPlayer() && currentTile.hasMurderer()){
-                //todo game over retry
-                System.out.println("U lose");
+
+            maze.setMazeCordsForMurderer(murderer);
+            if (loseGame(currentTile))
+                break;
+        }
+    }
+
+    private static boolean loseGame(Tile currentTile) {
+        if (currentTile.hasPlayer() && currentTile.hasMurderer()){
+            //todo game over retry
+            System.out.println("U lose");
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean winGame(Tile currentTile, Player player) {
+        if (currentTile.hasPlayer() && currentTile.hasMurderer() && player.hasGun())
+        {
+            //todo display total cash collected and no of turns
+            //todo end game
+            System.out.println("U win");
+            return true;
+        }
+        return false;
+    }
+
+    private static void pickGunUp(Player player, Tile tile) {
+
+        //check if gun is on tile
+        //if on tile, display option pick gun up
+        //if yest, remove gun from tile and set hasGun true
+        if (tile.getItem() instanceof Gun)
+        {
+            System.out.println("You See a Gun on the floor.");
+            System.out.println("Pick it up?");
+            System.out.println("1- Yes");
+            System.out.println("2- No");
+
+            int option;
+            option = scanner.nextInt();
+                switch (option){
+                    case 1:
+                        player.pickGunUp();
+                        tile.setItem(null);
+                        break;
+                    default:
+                        System.out.println("Your Choice");
+                        break;
+                }
+        }
+    }
+
+    private static Gun setGunSpawn(Gun gun, Maze maze) {
+        Random random = new Random();
+        double min = 0;
+        double max = 6;
+        //keep loop on until the murderer spawns on a block where there is no wall and player.
+        while(true) {
+            int randomRow = (int) (min + (max - min) * random.nextDouble());
+            int randomColumn = (int) (min + (max - min) * random.nextDouble());
+            Tile[][] tiles = maze.getTiles();
+            Tile tile = tiles[randomRow][randomColumn];
+            if (!tile.isWall())
+            {
+                tile.setItem(gun);
                 break;
             }
         }
+
+        return gun;
+
     }
 
     private static Murderer setMurdererSpawn(Murderer murderer, Maze maze) {
@@ -50,6 +120,7 @@ public class RunGame {
             {
                 murderer.setColumn(randomColumn);
                 murderer.setRow(randomRow);
+                tile.setMurderer(true);
                 break;
             }
         }
@@ -71,6 +142,7 @@ public class RunGame {
             {
                 player.setColumn(randomColumn);
                 player.setRow(randomRow);
+                tile.setPlayer(true);
                 break;
             }
         }
@@ -104,35 +176,51 @@ public class RunGame {
         System.out.println("7-South East");
         System.out.println("8-South West");
     }
-    public static void movePlayer(Player player){
+    public static void movePlayer(Player player,Maze maze){
 
         int option;
         System.out.println("Enter Choice: ");
         option = scanner.nextInt();
         switch (option){
             case 1:
-                player.movePlayerNorth();
+                maze.removeMazeCordsForPLayer(player);
+                player.movePlayerNorth(maze.getTiles());
+                maze.setMazeCordsForPLayer(player);
                 break;
             case 2:
-                player.movePlayerEast();
+                maze.removeMazeCordsForPLayer(player);
+                player.movePlayerEast(maze.getTiles());
+                maze.setMazeCordsForPLayer(player);
                 break;
             case 3:
-                player.movePlayerSouth();
+                maze.removeMazeCordsForPLayer(player);
+                player.movePlayerSouth(maze.getTiles());
+                maze.setMazeCordsForPLayer(player);
                 break;
             case 4:
-                player.movePlayerWest();
+                maze.removeMazeCordsForPLayer(player);
+                player.movePlayerWest(maze.getTiles());
+                maze.setMazeCordsForPLayer(player);
                 break;
             case 5:
-                player.movePlayerNorthEast();
+                maze.removeMazeCordsForPLayer(player);
+                player.movePlayerNorthEast(maze.getTiles());
+                maze.setMazeCordsForPLayer(player);
                 break;
             case 6:
-                player.movePlayerNorthWest();
+                maze.removeMazeCordsForPLayer(player);
+                player.movePlayerNorthWest(maze.getTiles());
+                maze.setMazeCordsForPLayer(player);
                 break;
             case 7:
-                player.movePlayerSouthEast();
+                maze.removeMazeCordsForPLayer(player);
+                player.movePlayerSouthEast(maze.getTiles());
+                maze.setMazeCordsForPLayer(player);
                 break;
             case 8:
-                player.movePlayerSouthWest();
+                maze.removeMazeCordsForPLayer(player);
+                player.movePlayerSouthWest(maze.getTiles());
+                maze.setMazeCordsForPLayer(player);
                 break;
             default:
                 System.out.println("Invalid Option.");

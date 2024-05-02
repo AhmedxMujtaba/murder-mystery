@@ -1,4 +1,6 @@
 package environment;
+import entities.Murderer;
+import entities.Player;
 import items.*;
 import java.util.Random;
 public class Maze {
@@ -12,13 +14,21 @@ public class Maze {
     private Tile[][] maze;
     public Maze(){
         this.maze = generateMaze();
-    }
-
-    private Tile[][] generateMaze(){
-        Tile[][] maze = new Tile[7][7];
-        //add walls and items and a gun;
-        generateWalls();
+        //add walls and items
+        generateWalls(20);
         generateCashItems();
+    }
+    private Tile[][] generateMaze()
+    {
+        int rows = 7, columns = 7;
+        maze = new Tile[rows][columns];
+        // Initialize the maze
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                maze[i][j] = new Tile();
+            }
+        }
+
         return maze;
     }
 
@@ -42,79 +52,108 @@ public class Maze {
     }
 
     //function to make walls
-    private void generateWalls(){
-        //max walls should be around 10-20
-        int row = giveRanNum(0,6);
-        int column = giveRanNum(0,6);
-        int maxWalls = giveRanNum(10,20);
+
+    public void generateWalls(int maxWalls) {
+        Random random = new Random();
         for (int i = 0; i < maxWalls; i++) {
-            Tile currentTile = maze[row][column];;
-            while (!currentTile.isWall()){
-                row = rowWithProbability(row,column,69);
-                column = columnWithProbability(row,column,69);
-                currentTile = maze[row][column];
+            int row = random.nextInt(maze.length);
+            int column = random.nextInt(maze[0].length);
+            Tile currentTile = maze[row][column];
+            while (!currentTile.isWall()) {
+                row = rowWithProbability(row, column, 69);
+                column = columnWithProbability(row, column, 69);
+                if (row >= 0 && row < maze.length && column >= 0 && column < maze[0].length) {
+                    currentTile = maze[row][column];
+                    currentTile.setWall(true);
+                } else {
+                    break;
+                }
             }
-            currentTile.setWall(true);
         }
+        printMazeLayout(maze);
     }
 
+    private int rowWithProbability(int row, int column, int probability) {
+        Random random = new Random();
+        int threshold = random.nextInt(100);
+        if (threshold < probability) {
+            if (row > 0 && !maze[row - 1][column].isWall()) {
+                return row - 1;
+            } else if (row < maze.length - 1 && !maze[row + 1][column].isWall()) {
+                return row + 1;
+            }
+        }
+        return row;
+    }
+
+    private int columnWithProbability(int row, int column, int probability) {
+        Random random = new Random();
+        int threshold = random.nextInt(100);
+        if (threshold < probability) {
+            if (column > 0 && !maze[row][column - 1].isWall()) {
+                return column - 1;
+            } else if (column < maze[0].length - 1 && !maze[row][column + 1].isWall()) {
+                return column + 1;
+            }
+        }
+        return column;
+    }
+
+        public Tile[][] getTiles() {
+        return maze;
+    }
+
+    public static void printMazeLayout(Tile[][] array) {
+        // Iterate over each row of the array
+        System.out.println("------");
+        for (int i = 0; i < array.length; i++) {
+            // Print the elements of the current row
+            for (int j = 0; j < array[0].length; j++) {
+                String entity;
+                Tile currentTile = array[i][j];
+                if (currentTile.isWall())
+                    entity = "[]";
+                else if (currentTile.hasMurderer())
+                    entity = "'M'";
+                else if (currentTile.hasPlayer()) {
+                    entity = "'P'";
+                }
+                else if (currentTile.getItem() instanceof Gun) {
+                    entity = "'G'";
+                }
+                else
+                    entity = ".";
+                System.out.printf("%2s ", entity);
+            }
+            System.out.println();
+        }
+    }
     private int giveRanNum(int start, int end){
         Random random = new Random();
         int num = random.nextInt(end+1)+start;
         return num;
     }
-    private int rowWithProbability(int row, int column, int probalility){
-        int num = 0;
-        int threshold = giveRanNum(0,100);
-        if (threshold < probalility){
-            //check for which side to go negative or positive
-            //if one side is filled go other, if both filled go random, else if both unfilled
-            //go to any one 50-50
 
-            if (!maze[row+1][column].isWall() && !maze[row-1][column].isWall() ){
-                return row + giveRanNum(-1,1);
-            }
-            else if (maze[row+1][column].isWall() && !maze[row-1][column].isWall())
-            {
-                return row - 1 ;
-            }
-            else if (!maze[row+1][column].isWall() && maze[row-1][column].isWall())
-            {
-                return row + 1 ;
-            }
-            else
-                return giveRanNum(0,6);
-        }
-        else
-            return giveRanNum(0,6);
+    public void setMazeCordsForPLayer(Player player){
+        int row = player.getRow();
+        int col = player.getColumn();
+        maze[row][col].setPlayer(true);
     }
-    private int columnWithProbability(int row, int column, int probalility){
-        int num = 0;
-        int threshold = giveRanNum(0,100);
-        if (threshold < probalility){
-            //check for which side to go negative or positive
-            //if one side is filled go other, if both filled go random, else if both unfilled
-            //go to any one 50-50
-            if (!maze[row][column+1].isWall() && !maze[row][column-1].isWall())
-            {
-                return row + giveRanNum(-1,1);
-            }
-            else if (maze[row][column+1].isWall() && !maze[row][column-1].isWall())
-            {
-                return row - 1 ;
-            }
-            else if (!maze[row][column+1].isWall() && maze[row][column-1].isWall())
-            {
-                return row + 1 ;
-            }
-            else
-                return giveRanNum(0,6);
-        }
-        else
-            return giveRanNum(0,6);
+    public void setMazeCordsForMurderer(Murderer murderer){
+        int row = murderer.getRow();
+        int col = murderer.getColumn();
+        maze[row][col].setMurderer(true);
+    }
+    public void removeMazeCordsForPLayer(Player player){
+        int row = player.getRow();
+        int col = player.getColumn();
+        maze[row][col].setPlayer(false);
+    }
+    public void removeMazeCordsForMurderer(Murderer murderer){
+        int row = murderer.getRow();
+        int col = murderer.getColumn();
+        maze[row][col].setMurderer(false);
     }
 
-    public Tile[][] getTiles() {
-        return maze;
-    }
+
 }
