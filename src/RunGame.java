@@ -26,6 +26,8 @@ public class RunGame {
             movePlayer(player,maze);
             Tile currentTile = player.getCurrentTile(tiles);
             pickGunUp(player, currentTile);
+            //todo check if murderer is working correctly
+            //not having issues with walls
             murderer.setColumnToFollow(player.getColumn());
             murderer.setRowToFollow(player.getRow());
             if (winGame(currentTile, player))

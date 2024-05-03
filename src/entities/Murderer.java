@@ -16,7 +16,7 @@ public class Murderer {
     private int rowToFollow;
     private int columnToFollow;
 
-    public void getPlayerCords(int r, int c){
+    public void setPlayerCordsToFollow(int r, int c){
         this.rowToFollow = r;
         this.columnToFollow = c;
     }
@@ -104,5 +104,13 @@ public class Murderer {
     public Tile getCurrentTile(Tile[][] tiles){
         Tile currentTile = tiles[row][column];
         return currentTile;
+    }
+
+    public int getColumnToFollow() {
+        return columnToFollow;
+    }
+
+    public int getRowToFollow() {
+        return rowToFollow;
     }
 }
