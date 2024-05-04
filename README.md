@@ -32,8 +32,10 @@ Navigate through the maze, collect cash (Yellow), and avoid the murderer (Red). 
 - Clone or download the repository to play the game on your local machine.
 
 **Screenshot:**
-![Game Screenshot](<img width="441" alt="Screenshot 2024-05-05 031253" src="https://github.com/AhmedxMujtaba/murder-mystery/assets/121884030/00ed6c89-c642-4d3e-995b-0e8c3e662c84">
-)
+-
+<img width="441" alt="Screenshot 2024-05-05 031253" src="https://github.com/AhmedxMujtaba/murder-mystery/assets/121884030/00ed6c89-c642-4d3e-995b-0e8c3e662c84">
+
+ 
 
 **How to Play:**
 1. Clone or download the repository from GitHub.
