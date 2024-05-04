@@ -28,6 +28,10 @@ public class RunGame {
         });
         greetings(player);
         while (true) {
+            System.out.println("Player: " + " " +player.getRow() + " "+player.getColumn());
+            System.out.println("Murderer: " + " " +murderer.getRow() + " "+murderer.getColumn());
+            System.out.println("Murderer Following: " + " " +murderer.getRowToFollow() + " "+murderer.getColumnToFollow());
+
             maze.printMazeLayout(tiles);
             mapUI.updateMapUI();
             //update maze map
@@ -36,22 +40,22 @@ public class RunGame {
             Tile currentTile = player.getCurrentTile(tiles);
             pickGunUp(player, currentTile);
             //todo check if murderer is working correctly
+            //find why murderer us clipping through walls and why isn't it pathfinding unless the player come close
             //not having issues with walls
-            murderer.setColumnToFollow(player.getColumn());
-            murderer.setRowToFollow(player.getRow());
+            murderer.setPlayerCordsToFollow(player.getRow(),player.getColumn());
             if (winGame(currentTile, player))
                 break;
             maze.removeMazeCordsForMurderer(murderer);
             murderer.followPlayer(maze.getTiles());
 
             maze.setMazeCordsForMurderer(murderer);
-            if (loseGame(currentTile))
+            if (loseGame(currentTile,player))
                 break;
         }
     }
 
-    private static boolean loseGame(Tile currentTile) {
-        if (currentTile.hasPlayer() && currentTile.hasMurderer()){
+    private static boolean loseGame(Tile currentTile, Player player) {
+        if (currentTile.hasPlayer() && currentTile.hasMurderer() && !player.hasGun() ){
             //todo game over retry
             System.out.println("U lose");
             return true;
@@ -90,7 +94,7 @@ public class RunGame {
                         tile.setItem(null);
                         break;
                     default:
-                        System.out.println("Your Choice");
+                        System.out.println("Your Choice..");
                         break;
                 }
         }
@@ -102,6 +106,7 @@ public class RunGame {
         double max = 6;
         //keep loop on until the murderer spawns on a block where there is no wall and player.
         while(true) {
+
             int randomRow = (int) (min + (max - min) * random.nextDouble());
             int randomColumn = (int) (min + (max - min) * random.nextDouble());
             Tile[][] tiles = maze.getTiles();

@@ -35,7 +35,7 @@ import environment.Tile;
     public static boolean IsWalkable(Tile[][] map, Point point) {
         if (point.y < 0 || point.y >= map.length) return false;
         if (point.x < 0 || point.x >= map[0].length) return false;
-        return !map[point.y][point.x].isWall();
+        return !map[point.x][point.y].isWall();
     }
 
     public static List<Point> FindNeighbors(Tile[][] map, Point point) {
