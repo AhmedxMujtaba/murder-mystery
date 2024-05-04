@@ -56,8 +56,8 @@ public class Player {
 
 
     /*
-     * Functions to make player move how will they work?
-     * Make player cordinates change.
+     * Functions to make player move, how will they work?
+     * Make player coordinates change.
      * set limit to cords must be between 0-6
      * return player cords and shot after chaning them
      */

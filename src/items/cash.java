@@ -29,4 +29,8 @@ public class cash extends item {
     int cash = random.nextInt(101) + 1;
     return cash;
     }
+
+    public int getCashAmount() {
+        return cashAmount;
+    }
 }

@@ -34,7 +34,7 @@ public class Maze {
 
     private void generateCashItems() {
         //distribute random items around 10-20 different tiles
-        int maxItems = giveRanNum(10,20);
+        int maxItems = giveRanNum(3,8);
         int prevRow = 0, prevColumn = 0;
         for (int i = 0; i <maxItems ; i++) {
             int row, column;
@@ -52,7 +52,6 @@ public class Maze {
     }
 
     //function to make walls
-
     public void generateWalls(int maxWalls) {
         Random random = new Random();
         for (int i = 0; i < maxWalls; i++) {

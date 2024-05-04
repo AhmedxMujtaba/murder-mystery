@@ -3,6 +3,7 @@ import javax.swing.*;
 import environment.Tile;
 import environment.Maze;
 import items.Gun;
+import items.cash;
 
 import java.awt.*;
 
@@ -48,6 +49,8 @@ public class MapUI extends JFrame {
                     cellLabel.setBackground(Color.GREEN); // Green color for cells with a player
                 } else if (map[i][j].getItem() instanceof Gun) {
                     cellLabel.setBackground(Color.BLUE); // Blue color for cells with a gun
+                } else if (map[i][j].getItem() instanceof cash) {
+                    cellLabel.setBackground(Color.YELLOW); // Blue color for cells with a gun
                 } else {
                     cellLabel.setBackground(Color.WHITE); // Default color for empty cells
                 }

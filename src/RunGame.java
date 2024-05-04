@@ -1,9 +1,12 @@
 import entities.*;
 import environment.*;
+
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.Random;
 import items.Gun;
 import UI.MapUI;
+import items.cash;
 
 import javax.swing.*;
 
@@ -18,7 +21,6 @@ public class RunGame {
         Maze maze = new Maze();
         Tile[][] tiles = maze.getTiles();
         Player player = setPlayerSpawn(new Player(),maze);
-
         Murderer murderer = setMurdererSpawn(new Murderer(),maze);
         Gun gun = setGunSpawn(new Gun(), maze);
         // Create and display the map GUI
@@ -27,7 +29,9 @@ public class RunGame {
             mapUI.setVisible(true);
         });
         greetings(player);
+        int noOfTurns = 0;
         while (true) {
+            noOfTurns++;
             System.out.println("Player: " + " " +player.getRow() + " "+player.getColumn());
             System.out.println("Murderer: " + " " +murderer.getRow() + " "+murderer.getColumn());
             System.out.println("Murderer Following: " + " " +murderer.getRowToFollow() + " "+murderer.getColumnToFollow());
@@ -35,29 +39,33 @@ public class RunGame {
             maze.printMazeLayout(tiles);
             mapUI.updateMapUI();
             //update maze map
+            displayCash(player);
             directionsOptions();
             movePlayer(player,maze);
             Tile currentTile = player.getCurrentTile(tiles);
+            //collect cash
+            collectCash(player,currentTile);
+            //check if there is a Gun on the tile
             pickGunUp(player, currentTile);
-            //todo check if murderer is working correctly
-            //find why murderer us clipping through walls and why isn't it pathfinding unless the player come close
-            //not having issues with walls
             murderer.setPlayerCordsToFollow(player.getRow(),player.getColumn());
-            if (winGame(currentTile, player))
+            if (winGame(currentTile, player)){
+                System.out.println("You Win " + player.getName());
+                System.out.println("Turns: " + noOfTurns);
+                System.out.println("Cash Collected: " + player.getCash() );
                 break;
+            }
             maze.removeMazeCordsForMurderer(murderer);
             murderer.followPlayer(maze.getTiles());
-
             maze.setMazeCordsForMurderer(murderer);
             if (loseGame(currentTile,player))
                 break;
         }
+        System.exit(0);
     }
 
     private static boolean loseGame(Tile currentTile, Player player) {
-        if (currentTile.hasPlayer() && currentTile.hasMurderer() && !player.hasGun() ){
-            //todo game over retry
-            System.out.println("U lose");
+        if (currentTile.hasPlayer() && currentTile.hasMurderer()){
+            System.out.println("Game Over " + player.getName());
             return true;
         }
         return false;
@@ -66,11 +74,30 @@ public class RunGame {
     private static boolean winGame(Tile currentTile, Player player) {
         if (currentTile.hasPlayer() && currentTile.hasMurderer() && player.hasGun())
         {
-            //todo display total cash collected and no of turns
-            //todo end game
-            System.out.println("U win");
-            return true;
+            System.out.println("1-Shoot");
+            System.out.println("2-Let Go");
+            // Handling input for integer
+            int option = 0;
+            while(true){
+                try {
+                    option = scanner.nextInt();
+                } catch (InputMismatchException e) {
+                    System.out.println("Invalid Choice, Try again");
+                    scanner.next();
+                }
+                break;
+            }
+            switch (option)
+            {
+                case 1:
+                    return true;
+                case 2:
+                    return false;
+                default:
+                    break;
+            }
         }
+
         return false;
     }
 
@@ -99,7 +126,18 @@ public class RunGame {
                 }
         }
     }
-
+    private static void collectCash(Player player, Tile tile){
+        if (tile.getItem() instanceof cash)
+        {
+            int cash = ((cash)tile.getItem()).getCashAmount();
+            player.addMoney(cash);
+            tile.setItem(null);
+            System.out.println("Cash Collected: " + cash);
+        }
+    }
+    private static void displayCash(Player player){
+        System.out.println("Cash: " + player.getCash() );
+    }
     private static Gun setGunSpawn(Gun gun, Maze maze) {
         Random random = new Random();
         double min = 0;
