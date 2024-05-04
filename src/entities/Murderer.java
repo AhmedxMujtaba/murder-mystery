@@ -1,6 +1,7 @@
 package entities;
 import environment.Tile;
 
+import java.util.List;
 import java.util.Random;
 
 
@@ -21,59 +22,18 @@ public class Murderer {
         this.columnToFollow = c;
     }
 
-    public void followPlayer(){
-        Random random = new Random();
-         double min;
-         double max;
-         int randomNo;
 
-       while(true)
-       {
-           if (row<rowToFollow){
-               min = 0;
-               max = 2;
-               randomNo = (int) (min + (max - min) * random.nextDouble());
-               if (randomNo + row < 6 && randomNo + row > 0)
-               {
-                   row = row + randomNo;
-                   break;
-               }
-           }
-           else if (row > rowToFollow)
-           {
-               min = -2;
-               max = 0;
-               randomNo = (int) (min + (max - min) * random.nextDouble());
-               if (randomNo + row < 6 && randomNo + row > 0)
-               {
-                   row = row + randomNo;
-                   break;
-               }
-           }
-       }
-        while(true)
-        {
-            if (column < columnToFollow){
-                min = 0;
-                max = 2;
-                randomNo = (int) (min + (max - min) * random.nextDouble());
-                if (randomNo + column < 6 && randomNo + column > 0)
-                {
-                    column = column + randomNo;
-                    break;
-                }
-            }
-            else if (column > columnToFollow)
-            {
-                min = -2;
-                max = 0;
-                randomNo = (int) (min + (max - min) * random.nextDouble());
-                if (randomNo + column < 6 && randomNo + column > 0)
-                {
-                    column = column + randomNo;
-                    break;
-                }
-            }
+    public void followPlayer(Tile[][] map) {
+        Point playerPosition = new Point(rowToFollow,columnToFollow,null);
+        // Get the current position of the Murderer
+        Point murdererPosition = new Point(row, column, null);
+        // Find a path from the Murderer's position to the player's position
+        List<Point> path = Point.FindPath(map, murdererPosition, playerPosition);
+        // If a valid path is found, move the Murderer along the path
+        if (path != null && !path.isEmpty()) {
+            Point nextPosition = path.get(0);
+            row = nextPosition.x;
+            column = nextPosition.y;
         }
     }
 

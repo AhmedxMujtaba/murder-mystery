@@ -3,6 +3,10 @@ import environment.*;
 import java.util.Scanner;
 import java.util.Random;
 import items.Gun;
+import UI.MapUI;
+
+import javax.swing.*;
+
 public class RunGame {
     //start game ask player for name.
     //make terrain.
@@ -17,11 +21,16 @@ public class RunGame {
 
         Murderer murderer = setMurdererSpawn(new Murderer(),maze);
         Gun gun = setGunSpawn(new Gun(), maze);
-
+        // Create and display the map GUI
+        MapUI mapUI = new MapUI(maze.getTiles());
+        SwingUtilities.invokeLater(() -> {
+            mapUI.setVisible(true);
+        });
         greetings(player);
-
         while (true) {
             maze.printMazeLayout(tiles);
+            mapUI.updateMapUI();
+            //update maze map
             directionsOptions();
             movePlayer(player,maze);
             Tile currentTile = player.getCurrentTile(tiles);
@@ -33,7 +42,7 @@ public class RunGame {
             if (winGame(currentTile, player))
                 break;
             maze.removeMazeCordsForMurderer(murderer);
-            murderer.followPlayer();
+            murderer.followPlayer(maze.getTiles());
 
             maze.setMazeCordsForMurderer(murderer);
             if (loseGame(currentTile))
