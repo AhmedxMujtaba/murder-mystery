@@ -69,7 +69,6 @@ public class Maze {
                 }
             }
         }
-        printMazeLayout(maze);
     }
 
     private int rowWithProbability(int row, int column, int probability) {

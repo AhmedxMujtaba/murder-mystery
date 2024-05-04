@@ -32,11 +32,7 @@ public class RunGame {
         int noOfTurns = 0;
         while (true) {
             noOfTurns++;
-            System.out.println("Player: " + " " +player.getRow() + " "+player.getColumn());
-            System.out.println("Murderer: " + " " +murderer.getRow() + " "+murderer.getColumn());
-            System.out.println("Murderer Following: " + " " +murderer.getRowToFollow() + " "+murderer.getColumnToFollow());
-
-            maze.printMazeLayout(tiles);
+            //maze.printMazeLayout(tiles); no need for console map no more
             mapUI.updateMapUI();
             //update maze map
             displayCash(player);
